@@ -380,7 +380,7 @@ const DATA = /*__DATA__*/;
 const FONT = '-apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
 const $ = id => document.getElementById(id);
 const fmt = s => { s=Math.round(s||0); const h=Math.floor(s/3600), m=Math.floor(s%3600/60); return h?h+'小时'+m+'分':m+'分钟'; };
-// 中文数量级：1478.2万 / 1.68亿
+// 中文数量级：例如 1234.5万 / 1.23亿
 const wan = n => { n=+n||0; if(n>=1e8) return (n/1e8).toFixed(2)+'亿'; if(n>=1e4) return (n/1e4).toFixed(n>=1e6?0:1)+'万'; return String(n); };
 const statOf = k => ((DATA.overall.readStat||[]).find(s=>s.stat===k)||{}).counts||'—';
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

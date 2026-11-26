@@ -72,7 +72,7 @@ def year_range(regist_time):
 
 
 def normalize_title(title):
-    """全角/半角标点归一化，用于同名合并（如『参与感:』与『参与感：』）。"""
+    """全角/半角标点归一化，用于同名合并（如『示例:标题』与『示例：标题』）。"""
     s = unicodedata.normalize("NFKC", title or "")
     s = re.sub(r"\s+", "", s)
     return s.lower()
