@@ -1,0 +1,91 @@
+name: 生成我的书迹
+
+# 触发方式：
+#   1. 手动：Actions 页面点 "Run workflow"（推荐，完全由你掌控）
+#   2. 定时：每周一 08:00（北京时间）自动刷新，不需要可注释掉 schedule
+on:
+  workflow_dispatch:
+    inputs:
+      include_secret:
+        description: '是否包含私密书（默认排除）'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check.outputs.skip }}
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 检查 Key
+        id: check
+        env:
+          WEREAD_API_KEY: ${{ secrets.WEREAD_API_KEY }}
+        run: |
+          if [ -z "$WEREAD_API_KEY" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::warning::未配置 WEREAD_API_KEY，本次跳过。请在 Settings → Secrets and variables → Actions 添加后重试。"
+          fi
+
+      - name: 安装 Python
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # 书墙要逐书补抓简介/笔记，缓存后每周只拉新增内容，避免限流与超时
+      - name: 缓存原始数据
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/cache@v4
+        with:
+          path: data/raw
+          key: shuji-raw-${{ github.repository }}-${{ github.run_id }}
+          restore-keys: |
+            shuji-raw-${{ github.repository }}-
+
+      - name: 生成页面
+        if: steps.check.outputs.skip != 'true'
+        env:
+          # Key 只注入环境变量，不进入代码、日志或产物
+          WEREAD_API_KEY: ${{ secrets.WEREAD_API_KEY }}
+          PYTHONIOENCODING: utf-8
+          INCLUDE_SECRET: ${{ inputs.include_secret == true && '--include-secret' || '' }}
+        run: python generate.py $INCLUDE_SECRET
+
+      - name: 准备 Pages 产物
+        if: steps.check.outputs.skip != 'true'
+        run: |
+          cp "dist/书迹.html" dist/index.html
+          ls -lh dist/index.html
+
+      - name: 上传 Pages 产物
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.skip != 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: 部署到 GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

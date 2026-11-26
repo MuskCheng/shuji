@@ -1,0 +1,5 @@
+{
+  "maxBookCloud": 100,
+  "maxFinishedPerYear": 200,
+  "output": "dist/书迹.html"
+}

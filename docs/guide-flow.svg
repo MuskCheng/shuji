@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="238" viewBox="0 0 920 238" role="img" aria-label="书迹生成与发布流程">
+  <style>
+    text{font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+    .box{fill:#f6f8fa;stroke:#d0d7de;stroke-width:1.5;rx:10}
+    .t{fill:#1f2328;font-size:15px;font-weight:600}
+    .s{fill:#57606a;font-size:12px}
+    .arrow{stroke:#8c959f;stroke-width:1.6;fill:none;marker-end:url(#a)}
+    .hot{fill:#fff7e6;stroke:#e8a33a}
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8c959f"/>
+    </marker>
+  </defs>
+
+  <rect class="box hot" x="10" y="34" width="172" height="72"/>
+  <text class="t" x="96" y="65" text-anchor="middle">微信读书接口</text>
+  <text class="s" x="96" y="87" text-anchor="middle">你的 API Key（仅 Secrets）</text>
+
+  <rect class="box" x="242" y="34" width="172" height="72"/>
+  <text class="t" x="328" y="65" text-anchor="middle">fetch.py</text>
+  <text class="s" x="328" y="87" text-anchor="middle">抓数据 → data/raw 缓存</text>
+
+  <rect class="box" x="474" y="34" width="172" height="72"/>
+  <text class="t" x="560" y="65" text-anchor="middle">build.py</text>
+  <text class="s" x="560" y="87" text-anchor="middle">套模板 → 单文件 HTML</text>
+
+  <path class="arrow" d="M182 70 H236"/>
+  <path class="arrow" d="M414 70 H468"/>
+
+  <rect class="box hot" x="700" y="20" width="206" height="60"/>
+  <text class="t" x="803" y="46" text-anchor="middle">GitHub Pages</text>
+  <text class="s" x="803" y="66" text-anchor="middle">公开链接 · 可发朋友圈</text>
+
+  <rect class="box" x="700" y="98" width="206" height="60"/>
+  <text class="t" x="803" y="124" text-anchor="middle">本地 dist/书迹.html</text>
+  <text class="s" x="803" y="144" text-anchor="middle">离线打开 · 下载后转发</text>
+
+  <path class="arrow" d="M646 70 H694"/>
+  <path class="arrow" d="M646 84 Q674 128 694 128"/>
+
+  <rect x="10" y="184" width="896" height="38" rx="8" fill="#f0f3f6" stroke="#d8dee4"/>
+  <text class="s" x="24" y="208">私密书默认过滤 · 头像转 base64 内嵌 · 原始数据与 Key 都不进 git · 分享海报在页面里按需生成</text>
+</svg>
